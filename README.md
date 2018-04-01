@@ -1,5 +1,5 @@
 # KongzueUpdateSDK
-APP更新工具
+Kongzue APP更新工具
 
 ### 说明
 0) 本工具无需本地存储读写权限，但使用前请务必保证 targetSdkVersion <= 25 ，经测试，部分机器在大于25的情况下无法正常弹出安装。
@@ -79,6 +79,7 @@ UpdateUtil updateUtil = new UpdateUtil(MainActivity.this, BuildConfig.APPLICATIO
 
 ### 引入KongzueUpdateSDK到您的项目
 当前版本号：1.0.0
+
 引入方法：
 ```
 compile 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.0.0'
