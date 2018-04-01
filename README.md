@@ -2,9 +2,9 @@
 Kongzue APP更新工具
 
 ### 说明
-0) 本工具无需本地存储读写权限，但使用前请务必保证 targetSdkVersion <= 25 ，经测试，部分机器在大于25的情况下无法正常弹出安装。
-1) 本工具提供下载、安装步骤，因网络请求框架不确定，本工具不包含到您服务器的检查更新的网络请求，请在获取到相应的更新信息请您自行完成。
-2) 本工具需要您提供的参数对照表如下：
+1) 本工具无需本地存储读写权限，但使用前请务必保证 targetSdkVersion <= 25 ，经测试，部分机器在大于25的情况下无法正常弹出安装。
+2) 本工具提供下载、安装步骤，因网络请求框架不确定，本工具不包含到您服务器的检查更新的网络请求，请在获取到相应的更新信息请您自行完成。
+3) 本工具需要您提供的参数对照表如下：
 
 字段 | 含义 | 是否必须
 ---|---|---
@@ -15,8 +15,44 @@ me(Context) | 上下文索引 | 必须
 packageName | 包名 | 必须
 onDownloadListener | 下载监听器 | 可选
 
-3) 准备
-使用前请先创建UpdateInfo，举例方法如下
+### 准备
+1) 修改 AndroidManifest.xml
+因 Android 7.0规范限定，我们需要创建一个共享目录来存储下载的文件
+请在 AndroidManifest.xml 中加入如下代码：
+```
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="您的包名">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        ...>
+        
+        ...
+        
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="您的包名.fileProvider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path"/>
+        </provider>
+    </application>
+</manifest>
+```
+接下来在 res 目录下创建文件夹 xml，并添加文件 file_path.xml：
+```
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <paths>
+        <external-path path="" name="download"/>
+    </paths>
+</resources>
+```
+
+2) 使用前请先创建UpdateInfo，举例方法如下
 
 ```
 updateInfo = new UpdateInfo()
@@ -29,22 +65,22 @@ updateInfo = new UpdateInfo()
 .setDownloadUrl("http://paywhere.kongzue.com/downloads/paywhere.apk");
 ```
 
-4) 下载并安装
-使用如下语句创建下载工具：
+### 下载并安装
+1) 使用如下语句创建下载工具：
 me(Context) 传入上下文索引，一般使用本 Activity 即可
 packageName 可直接使用 BuildConfig.APPLICATION_ID 获取：
 
 ```
 UpdateUtil updateUtil = new UpdateUtil(MainActivity.this, BuildConfig.APPLICATION_ID);
 ```
-开始下载：
+2) 开始下载：
 
 ```
 updateUtil.doUpdate(updateInfo);
 ```
 下载完成后会自动调用安装。
 
-5) 关于下载的监听
+3) 关于下载的监听
 您可以通过以下代码监听下载过程：
 
 ```
@@ -64,8 +100,8 @@ UpdateUtil updateUtil = new UpdateUtil(MainActivity.this, BuildConfig.APPLICATIO
             }
         })
 ```
-
-6) 可选的更新提示对话框
+### 其他
+可选的更新提示对话框
 KongzueUpdateSDK 提供了一个可选使用的简易更新提示对话框，调用方法如下：
 
 ```
