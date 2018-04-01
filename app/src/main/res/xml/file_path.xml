@@ -1,0 +1,7 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <paths>
+        <external-path path="" name="download"/>
+        <external-path path="Android/data/com.kongzue.kongzueupdatesdk/" name="files_root" />
+        <external-path path="." name="external_storage_root" />
+    </paths>
+</resources>
