@@ -118,5 +118,5 @@ UpdateUtil updateUtil = new UpdateUtil(MainActivity.this, BuildConfig.APPLICATIO
 
 引入方法：
 ```
-compile 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.0.0'
+implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.0.0'
 ```
