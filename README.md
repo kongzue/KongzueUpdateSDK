@@ -120,3 +120,7 @@ UpdateUtil updateUtil = new UpdateUtil(MainActivity.this, BuildConfig.APPLICATIO
 ```
 implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.0.0'
 ```
+或下载AAR包：
+```
+http://kongzue.com/open_score/KongzueUpdateSDK/1.0.0.aar
+```
