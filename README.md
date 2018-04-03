@@ -15,6 +15,12 @@ me(Context) | 上下文索引 | 必须
 packageName | 包名 | 必须
 onDownloadListener | 下载监听器 | 可选
 
+需要的权限：
+```
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.INTERNET"/>
+```
+
 ### 准备
 1) 修改 AndroidManifest.xml
 因 Android 7.0规范限定，我们需要创建一个共享目录来存储下载的文件
