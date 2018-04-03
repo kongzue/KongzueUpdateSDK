@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -196,5 +198,15 @@ public class UpdateUtil {
     private void log(Object o) {
         if (BuildConfig.DEBUG)
             Log.d(">>>", o.toString());
+    }
+
+    private boolean isWifi() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) me.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetInfo != null
+                && activeNetInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+            return true;
+        }
+        return false;
     }
 }
