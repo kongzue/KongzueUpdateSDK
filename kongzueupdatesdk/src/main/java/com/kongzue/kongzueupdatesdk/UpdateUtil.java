@@ -45,6 +45,11 @@ public class UpdateUtil {
         if (updateInfo == null) {
             return false;
         }
+        if (android.os.Build.MANUFACTURER.toLowerCase().equals("samsung")){
+            //部分三星手机使用直接安装会导致崩溃，因此使用自带浏览器下载
+            OpenWebBrowserAndOpenLink(updateInfo.getDownloadUrl());
+            return true;
+        }
         mReceiver = new DownloadFinishReceiver();
         me.registerReceiver(mReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(updateInfo.getDownloadUrl()));
@@ -57,6 +62,14 @@ public class UpdateUtil {
         doGetProgress();
 
         return true;
+    }
+
+    private void OpenWebBrowserAndOpenLink(String downloadUrl) {
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        Uri content_url = Uri.parse(downloadUrl);
+        intent.setData(content_url);
+        me.startActivity(intent);
     }
 
     private void doGetProgress() {
