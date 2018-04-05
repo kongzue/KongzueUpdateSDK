@@ -1,6 +1,7 @@
 package com.kongzue.kongzueupdatesdk;
 
 import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,6 +23,11 @@ import java.io.File;
 import static android.content.Context.DOWNLOAD_SERVICE;
 
 public class UpdateUtil {
+
+    public static boolean isShowProgressDialog = true;          //是否显示更新进度对话框
+    public static String hideProgressDialogButtonCaption = "后台下载";
+    public static String cancelProgressDialogButtonCaption = "取消下载";
+    public static String progressDialogTitle = "正在下载";
 
     private Context me;
     private String packageName;
@@ -45,7 +51,7 @@ public class UpdateUtil {
         if (updateInfo == null) {
             return false;
         }
-        if (android.os.Build.MANUFACTURER.toLowerCase().equals("samsung")){
+        if (android.os.Build.MANUFACTURER.toLowerCase().equals("samsung")) {
             //部分三星手机使用直接安装会导致崩溃，因此使用自带浏览器下载
             OpenWebBrowserAndOpenLink(updateInfo.getDownloadUrl());
             return true;
@@ -54,12 +60,14 @@ public class UpdateUtil {
         me.registerReceiver(mReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(updateInfo.getDownloadUrl()));
         file = new File(me.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), updateInfo.getVer() + ".apk");
+        if (file.exists()) file.delete();       //文件存在则删除
         Uri path = Uri.fromFile(file);
         log("path:" + path.toString());
         request.setDestinationUri(path);
         downloadId = downloadManager.enqueue(request);
         if (onDownloadListener != null) onDownloadListener.onStart(downloadId);
         doGetProgress();
+        showProgressDialog();
 
         return true;
     }
@@ -82,8 +90,11 @@ public class UpdateUtil {
                     onDownloadListener.onDownloading(downloadId, progress);
                 if (progress != 100) {
                     doGetProgress();
+                    if (progressDialog != null) progressDialog.incrementProgressBy(progress);
                 } else {
+                    if (progressDialog != null) progressDialog.dismiss();
                     installApk(me);
+                    return;
                 }
             }
         }, 10);
@@ -221,5 +232,33 @@ public class UpdateUtil {
             return true;
         }
         return false;
+    }
+
+    private ProgressDialog progressDialog;
+
+    public void showProgressDialog() {
+        if (!isShowProgressDialog) return;
+        progressDialog = new ProgressDialog(me);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条
+        progressDialog.setCancelable(true);// 设置是否可以通过点击Back键取消
+        progressDialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
+        progressDialog.setTitle(progressDialogTitle);
+        progressDialog.setMax(100);
+        progressDialog.setButton(DialogInterface.BUTTON_POSITIVE, hideProgressDialogButtonCaption,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        progressDialog.dismiss();
+                    }
+                });
+        progressDialog.setButton(DialogInterface.BUTTON_NEUTRAL, cancelProgressDialogButtonCaption,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        progressDialog.dismiss();
+                        downloadManager.remove(downloadId);
+                    }
+                });
+        progressDialog.show();
     }
 }
