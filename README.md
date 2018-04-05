@@ -120,7 +120,7 @@ UpdateUtil updateUtil = new UpdateUtil(MainActivity.this, BuildConfig.APPLICATIO
 ```
 
 ### 引入KongzueUpdateSDK到您的项目
-当前版本号：1.0.0
+当前版本号：1.2.0
 
 引入方法：
 ```
