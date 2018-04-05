@@ -133,5 +133,6 @@ http://kongzue.com/open_score/KongzueUpdateSDK/1.0.0.aar
 
 额外的小工具：
 ```
-UpdateUtil.isWifi()     //判断Wifi状态
+UpdateUtil.isWifi()                         //判断Wifi状态
+UpdateUtil.isShowProgressDialog = true;     //是否开启进度对话框（默认开启）
 ```
