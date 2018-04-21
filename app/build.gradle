@@ -27,5 +27,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation project(':kongzueupdatesdk')
 
-//    implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.0.0'
+//    implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.3.0'
 }

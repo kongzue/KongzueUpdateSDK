@@ -51,11 +51,6 @@ public class UpdateUtil {
         if (updateInfo == null) {
             return false;
         }
-        if (android.os.Build.MANUFACTURER.toLowerCase().equals("samsung")) {
-            //部分三星手机使用直接安装会导致崩溃，因此使用自带浏览器下载
-            OpenWebBrowserAndOpenLink(updateInfo.getDownloadUrl());
-            return true;
-        }
         mReceiver = new DownloadFinishReceiver();
         me.registerReceiver(mReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(updateInfo.getDownloadUrl()));
@@ -102,15 +97,38 @@ public class UpdateUtil {
 
     private void installApk(Context context) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Uri contentUri = FileProvider.getUriForFile(context, packageName + ".fileProvider", file);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+        } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            intent.setDataAndType(Uri.fromFile(getRealFileInAndroudM(context, downloadId)), "application/vnd.android.package-archive");
         } else {
             intent.setDataAndType(Uri.fromFile(file),
                     "application/vnd.android.package-archive");
         }
         context.startActivity(intent);
+    }
+
+    private File getRealFileInAndroudM(Context context, long downloadId) {
+        File file = null;
+        DownloadManager downloader = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        if (downloadId != -1) {
+            DownloadManager.Query query = new DownloadManager.Query();
+            query.setFilterById(downloadId);
+            query.setFilterByStatus(DownloadManager.STATUS_SUCCESSFUL);
+            Cursor cur = downloader.query(query);
+            if (cur != null) {
+                if (cur.moveToFirst()) {
+                    String uriString = cur.getString(cur.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                    if (!uriString.isEmpty()) {
+                        file = new File(Uri.parse(uriString).getPath());
+                    }
+                }
+                cur.close();
+            }
+        }
+        return file;
     }
 
     private int getProgress(long downloadId) {
