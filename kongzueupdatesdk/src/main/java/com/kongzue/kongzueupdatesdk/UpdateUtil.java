@@ -85,7 +85,7 @@ public class UpdateUtil {
                     onDownloadListener.onDownloading(downloadId, progress);
                 if (progress != 100) {
                     doGetProgress();
-                    if (progressDialog != null) progressDialog.incrementProgressBy(progress);
+                    if (progressDialog != null) progressDialog.setProgress(progress);
                 } else {
                     if (progressDialog != null) progressDialog.dismiss();
                     installApk(me);
