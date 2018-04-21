@@ -130,11 +130,7 @@ UpdateUtil updateUtil = new UpdateUtil(MainActivity.this, BuildConfig.APPLICATIO
 
 引入方法：
 ```
-implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.0.0'
-```
-或手动下载AAR包：
-```
-http://kongzue.com/open_score/KongzueUpdateSDK/1.0.0.aar
+implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.4.0'
 ```
 
 额外的小工具：
