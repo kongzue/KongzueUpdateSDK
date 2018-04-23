@@ -1,6 +1,19 @@
 # KongzueUpdateSDK
 Kongzue APP更新工具
 
+<a href="https://github.com/kongzue/KongzueUpdateSDK">
+<img src="https://img.shields.io/badge/KongzueUpdateSDK-1.4.0-green.svg" alt="KongzueUpdateSDK">
+</a> 
+<a href="https://bintray.com/myzchh/maven/KongzueUpdateSDK">
+<img src="https://img.shields.io/badge/Maven-2.0.2-blue.svg" alt="Maven">
+</a> 
+<a href="http://www.apache.org/licenses/LICENSE-2.0">
+<img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="Maven">
+</a> 
+<a href="http://www.kongzue.com">
+<img src="https://img.shields.io/badge/Homepage-Kongzue.com-brightgreen.svg" alt="Maven">
+</a> 
+
 ### 更新日志：
 1.3.0：修复安卓8.0设备上安装崩溃的问题；
 
