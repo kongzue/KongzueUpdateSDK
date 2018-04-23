@@ -5,7 +5,7 @@ Kongzue APP更新工具
 <img src="https://img.shields.io/badge/KongzueUpdateSDK-1.4.0-green.svg" alt="KongzueUpdateSDK">
 </a> 
 <a href="https://bintray.com/myzchh/maven/KongzueUpdateSDK">
-<img src="https://img.shields.io/badge/Maven-2.0.2-blue.svg" alt="Maven">
+<img src="https://img.shields.io/badge/Maven-1.4.0-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="Maven">
