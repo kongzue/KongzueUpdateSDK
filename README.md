@@ -1,6 +1,25 @@
 # KongzueUpdateSDK
 Kongzue APP更新工具
 
+<a href="https://github.com/kongzue/KongzueUpdateSDK">
+<img src="https://img.shields.io/badge/KongzueUpdateSDK-1.4.0-green.svg" alt="KongzueUpdateSDK">
+</a> 
+<a href="https://bintray.com/myzchh/maven/KongzueUpdateSDK">
+<img src="https://img.shields.io/badge/Maven-1.4.0-blue.svg" alt="Maven">
+</a> 
+<a href="http://www.apache.org/licenses/LICENSE-2.0">
+<img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="Maven">
+</a> 
+<a href="http://www.kongzue.com">
+<img src="https://img.shields.io/badge/Homepage-Kongzue.com-brightgreen.svg" alt="Maven">
+</a> 
+
+### 更新日志：
+1.3.0：修复安卓8.0设备上安装崩溃的问题；
+
+1.4.0：修复进度显示可能存在问题的bug；
+
+
 ### 说明
 ~~1) 本工具无需本地存储读写权限，但使用前请务必保证 targetSdkVersion <= 25 ，经测试，部分机器在大于25的情况下无法正常弹出安装。~~
 1) 本工具无需权限，但在 targetSdkVersion >= 26 的情况时可能出现安装程序闪退但不报错的问题，系 Android 8.0 的新规定，请在您的应用中添加如下权限即可：
@@ -125,15 +144,10 @@ UpdateUtil updateUtil = new UpdateUtil(MainActivity.this, BuildConfig.APPLICATIO
 ```
 
 ### 引入KongzueUpdateSDK到您的项目
-当前版本号：1.2.0
 
 引入方法：
 ```
-implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.0.0'
-```
-或手动下载AAR包：
-```
-http://kongzue.com/open_score/KongzueUpdateSDK/1.0.0.aar
+implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.4.0'
 ```
 
 额外的小工具：
