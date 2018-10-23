@@ -2,10 +2,10 @@
 Kongzue APP更新工具
 
 <a href="https://github.com/kongzue/KongzueUpdateSDK">
-<img src="https://img.shields.io/badge/KongzueUpdateSDK-1.4.0-green.svg" alt="KongzueUpdateSDK">
+<img src="https://img.shields.io/badge/KongzueUpdateSDK-1.4.1-green.svg" alt="KongzueUpdateSDK">
 </a> 
 <a href="https://bintray.com/myzchh/maven/KongzueUpdateSDK">
-<img src="https://img.shields.io/badge/Maven-1.4.0-blue.svg" alt="Maven">
+<img src="https://img.shields.io/badge/Maven-1.4.1-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="Maven">
@@ -14,11 +14,13 @@ Kongzue APP更新工具
 <img src="https://img.shields.io/badge/Homepage-Kongzue.com-brightgreen.svg" alt="Maven">
 </a> 
 
-### 更新日志：
-1.3.0：修复安卓8.0设备上安装崩溃的问题；
 
-1.4.0：修复进度显示可能存在问题的bug；
+### 引入KongzueUpdateSDK到您的项目
 
+引入方法：
+```
+implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.4.1'
+```
 
 ### 说明
 ~~1) 本工具无需本地存储读写权限，但使用前请务必保证 targetSdkVersion <= 25 ，经测试，部分机器在大于25的情况下无法正常弹出安装。~~
@@ -143,15 +145,35 @@ UpdateUtil updateUtil = new UpdateUtil(MainActivity.this, BuildConfig.APPLICATIO
                 "取消");
 ```
 
-### 引入KongzueUpdateSDK到您的项目
-
-引入方法：
-```
-implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.4.0'
-```
-
 额外的小工具：
 ```
 UpdateUtil.isWifi()                         //判断Wifi状态
 UpdateUtil.isShowProgressDialog = true;     //是否开启进度对话框（默认开启）
+```
+
+### 更新日志：
+1.4.1：
+- 修复 onDownloadListener.onSuccess 不执行的问题；
+
+1.4.0：
+- 修复进度显示可能存在问题的bug；
+
+1.3.0：
+- 修复安卓8.0设备上安装崩溃的问题；
+
+## 开源协议
+```
+Copyright KongzueUpdateSDK
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ```

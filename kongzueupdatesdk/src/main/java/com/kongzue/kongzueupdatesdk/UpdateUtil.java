@@ -89,6 +89,8 @@ public class UpdateUtil {
                 } else {
                     if (progressDialog != null) progressDialog.dismiss();
                     installApk(me);
+    
+                    if (onDownloadListener != null) onDownloadListener.onSuccess(downloadId);
                     return;
                 }
             }
@@ -210,8 +212,8 @@ public class UpdateUtil {
     private class DownloadFinishReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-            if (onDownloadListener != null) onDownloadListener.onSuccess(downloadId);
+//            long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+//            if (onDownloadListener != null) onDownloadListener.onSuccess(downloadId);
         }
     }
 

@@ -6,18 +6,15 @@ def siteUrl = 'https://github.com/kongzue/KongzueUpdateSDK' //项目在github主
 def gitUrl = 'https://github.com/kongzue/KongzueUpdateSDK.git'   //Git仓库的地址
 
 group = "com.kongzue.kongzueupdatesdk"//发布aar前缀根节点
-version = "1.4.0"//发布aar的库版本
+version = "1.4.1"//发布aar的库版本
 android {
     compileSdkVersion 26
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 4
-        versionName "1.4"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        targetSdkVersion 26
+        versionCode 5
+        versionName "1.4.1"
     }
 
     buildTypes {
@@ -97,9 +94,5 @@ bintray {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation 'com.android.support:appcompat-v7:26.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
