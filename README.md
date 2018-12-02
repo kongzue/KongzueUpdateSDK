@@ -23,7 +23,7 @@ implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.4.1'
 ```
 
 ### 说明
-1) 本工具无需权限，但在 targetSdkVersion >= 26 的情况时可能出现安装程序闪退但不报错的问题，系 Android 8.0 的新规定，请在您的应用中添加如下权限即可：
+1) 本工具无需存储读写权限，但在 targetSdkVersion >= 26 的情况时可能出现安装程序闪退但不报错的问题，系 Android 8.0 的新规定，请在您的应用中添加如下权限即可：
 ```
 <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 ```
