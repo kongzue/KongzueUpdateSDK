@@ -166,23 +166,6 @@ UpdateUtil.isShowProgressDialog = true;     //是否开启进度对话框（默�
 
 额外的，UpdateUtil 公开了 installApk(Context) 方法，使用该方法可以手动重新启动安装，但此方法必须通过 UpdateUtil 下载完成后才可以使用。
 
-### 更新日志：
-1.4.3：
-- 更新提示对话框的"从商店下载"、"直接下载"按钮新增 null 文本判断，若使用 null 则会隐藏该按钮。
-- 新增强制更新属性，使用默认更新提示对话框开启该属性时无法取消，且对话框无法关闭；
-
-1.4.2：
-- 修复当 updateInfo.getVer() 为空时导致安装失败的问题；
-
-1.4.1：
-- 修复 onDownloadListener.onSuccess 不执行的问题；
-
-1.4.0：
-- 修复进度显示可能存在问题的bug；
-
-1.3.0：
-- 修复安卓8.0设备上安装崩溃的问题；
-
 ## 开源协议
 ```
 Copyright KongzueUpdateSDK
@@ -199,3 +182,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
+
+## 更新日志：
+1.4.3：
+- 更新提示对话框的"从商店下载"、"直接下载"按钮新增 null 文本判断，若使用 null 则会隐藏该按钮。
+- 新增强制更新属性，使用默认更新提示对话框开启该属性时无法取消，且对话框无法关闭；
+
+1.4.2：
+- 修复当 updateInfo.getVer() 为空时导致安装失败的问题；
+
+1.4.1：
+- 修复 onDownloadListener.onSuccess 不执行的问题；
+
+1.4.0：
+- 修复进度显示可能存在问题的bug；
+
+1.3.0：
+- 修复安卓8.0设备上安装崩溃的问题；
