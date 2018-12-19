@@ -6,15 +6,15 @@ def siteUrl = 'https://github.com/kongzue/KongzueUpdateSDK' //项目在github主
 def gitUrl = 'https://github.com/kongzue/KongzueUpdateSDK.git'   //Git仓库的地址
 
 group = "com.kongzue.kongzueupdatesdk"//发布aar前缀根节点
-version = "1.4.1"//发布aar的库版本
+version = "1.4.3"//发布aar的库版本
 android {
     compileSdkVersion 26
 
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 5
-        versionName "1.4.1"
+        versionCode 6
+        versionName "1.4.3"
     }
 
     buildTypes {

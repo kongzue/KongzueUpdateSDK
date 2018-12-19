@@ -2,10 +2,10 @@
 Kongzue APP更新工具
 
 <a href="https://github.com/kongzue/KongzueUpdateSDK">
-<img src="https://img.shields.io/badge/KongzueUpdateSDK-1.4.1-green.svg" alt="KongzueUpdateSDK">
+<img src="https://img.shields.io/badge/KongzueUpdateSDK-1.4.3-green.svg" alt="KongzueUpdateSDK">
 </a> 
 <a href="https://bintray.com/myzchh/maven/KongzueUpdateSDK">
-<img src="https://img.shields.io/badge/Maven-1.4.1-blue.svg" alt="Maven">
+<img src="https://img.shields.io/badge/Maven-1.4.3-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="Maven">
@@ -15,14 +15,14 @@ Kongzue APP更新工具
 </a> 
 
 
-### 引入KongzueUpdateSDK到您的项目
+## 引入KongzueUpdateSDK到您的项目
 
 引入方法：
 ```
-implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.4.1'
+implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.4.3'
 ```
 
-### 说明
+## 重要说明
 1) 本工具无需权限，但在 targetSdkVersion >= 26 的情况时可能出现安装程序闪退但不报错的问题，系 Android 8.0 的新规定，请在您的应用中添加如下权限即可：
 ```
 <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
@@ -46,7 +46,7 @@ onDownloadListener | 下载监听器 | 可选
 <uses-permission android:name="android.permission.INTERNET"/>
 ```
 
-### 准备
+## 准备
 1) 修改 AndroidManifest.xml
 因 Android 7.0规范限定，我们需要创建一个共享目录来存储下载的文件
 请在 AndroidManifest.xml 中加入如下代码：
@@ -96,7 +96,7 @@ updateInfo = new UpdateInfo()
 .setDownloadUrl("http://paywhere.kongzue.com/downloads/paywhere.apk");
 ```
 
-### 下载并安装
+## 下载并安装
 1) 使用如下语句创建下载工具：
 me(Context) 传入上下文索引，一般使用本 Activity 即可
 packageName 可直接使用 BuildConfig.APPLICATION_ID 获取：
@@ -104,14 +104,13 @@ packageName 可直接使用 BuildConfig.APPLICATION_ID 获取：
 ```
 UpdateUtil updateUtil = new UpdateUtil(MainActivity.this, BuildConfig.APPLICATION_ID);
 ```
-2) 开始下载：
+2) 开始下载（结束后自动会弹出安装界面）：
 
 ```
 updateUtil.doUpdate(updateInfo);
 ```
-下载完成后会自动调用安装。
 
-3) 关于下载的监听
+## 关于下载的监听
 您可以通过以下代码监听下载过程：
 
 ```
@@ -129,9 +128,13 @@ UpdateUtil updateUtil = new UpdateUtil(MainActivity.this, BuildConfig.APPLICATIO
             public void onSuccess(long downloadId) {
                 Log.i("MainActivity", "onStart: 下载完成");
             }
+            @Override
+            public void onCancel(long downloadId) {
+                Log.i("MainActivity", "onStart: 下载取消");
+            }
         })
 ```
-### 其他
+## 其他
 可选的更新提示对话框
 KongzueUpdateSDK 提供了一个可选使用的简易更新提示对话框，调用方法如下：
 
@@ -144,13 +147,33 @@ UpdateUtil updateUtil = new UpdateUtil(MainActivity.this, BuildConfig.APPLICATIO
                 "取消");
 ```
 
+其中"从商店下载"、"直接下载"可传 null，若使用 null 则会隐藏该按钮。
+
 额外的小工具：
 ```
 UpdateUtil.isWifi()                         //判断Wifi状态
 UpdateUtil.isShowProgressDialog = true;     //是否开启进度对话框（默认开启）
 ```
 
+## 强制更新
+从 1.4.3 版本起，在使用 showNormalUpdateDialog 方法时新增了一个可选参数 isForced，当它传入 true 值时会开启强制更新。
+
+强制更新开启后，弹出检查到更新对话框时，无法取消，在更新过程中点击对话框外无法取消。
+
+但用户在更新过程中依然可以点击“取消下载”按钮退出下载过程，此时 OnDownloadListener 监听器的 onCancel 事件会被调用，开发者可以自行选择退出程序等操作。
+
+下载完成后 UpdateUtil 会自动弹出安装，但因为安装过程不可控，用户可能手动返回，因此强烈建议开发者在 OnDownloadListener 的 onSuccess 事件中对软件进行退出，或者弹出一个自己的对话框阻止用户操作。
+
+额外的，UpdateUtil 公开了 installApk(Context) 方法，使用该方法可以手动重新启动安装，但此方法必须通过 UpdateUtil 下载完成后才可以使用。
+
 ### 更新日志：
+1.4.3：
+- 更新提示对话框的"从商店下载"、"直接下载"按钮新增 null 文本判断，若使用 null 则会隐藏该按钮。
+- 新增强制更新属性，使用默认更新提示对话框开启该属性时无法取消，且对话框无法关闭；
+
+1.4.2：
+- 修复当 updateInfo.getVer() 为空时导致安装失败的问题；
+
 1.4.1：
 - 修复 onDownloadListener.onSuccess 不执行的问题；
 

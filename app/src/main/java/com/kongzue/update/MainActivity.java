@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnDownload;
 
     private UpdateInfo updateInfo;
+    private UpdateUtil updateUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UpdateUtil updateUtil = new UpdateUtil(MainActivity.this, BuildConfig.APPLICATION_ID)
+                updateUtil = new UpdateUtil(MainActivity.this, BuildConfig.APPLICATION_ID)
                         .setOnDownloadListener(new UpdateUtil.OnDownloadListener() {
                             @Override
                             public void onStart(long downloadId) {
@@ -51,13 +52,19 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(long downloadId) {
                                 Log.i("MainActivity", "onStart: 下载完成");
+                                finish();
+                            }
+    
+                            @Override
+                            public void onCancel(long downloadId) {
+        
                             }
                         })
                         .showNormalUpdateDialog(updateInfo,
                                 "检查到更新（" + updateInfo.getVer() + "）",
                                 "从商店下载",
                                 "直接下载",
-                                "取消");
+                                "取消",true);
             }
         });
     }
