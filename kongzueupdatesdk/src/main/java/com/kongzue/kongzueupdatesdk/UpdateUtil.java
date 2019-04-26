@@ -24,6 +24,8 @@ import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static android.app.DownloadManager.Request.VISIBILITY_VISIBLE;
+import static android.app.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED;
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_NEUTRAL;
@@ -31,10 +33,12 @@ import static android.content.DialogInterface.BUTTON_POSITIVE;
 
 public class UpdateUtil {
     
-    public static boolean isShowProgressDialog = true;          //是否显示更新进度对话框
+    public static String updateTitle = "发现新的版本";
+    public static boolean isShowProgressDialog = false;          //是否显示默认更新进度对话框
     public static String hideProgressDialogButtonCaption = "后台下载";
     public static String cancelProgressDialogButtonCaption = "取消下载";
-    public static String progressDialogTitle = "正在下载";
+    public static String progressDialogTitle = "正在下载更新";
+    public static String progressDescription = "";
     
     private Context me;
     private String packageName;
@@ -60,13 +64,20 @@ public class UpdateUtil {
         }
         mReceiver = new DownloadFinishReceiver();
         me.registerReceiver(mReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(updateInfo.getDownloadUrl()));
+        log("开始下载：" + updateInfo.getDownloadUrl());
         String ver = updateInfo.getVer() == null ? "" : "_" + updateInfo.getVer();
         file = new File(me.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), packageName + ver + ".apk");
         if (file.exists()) file.delete();       //文件存在则删除
         Uri path = Uri.fromFile(file);
-        log("path:" + path.toString());
+        log("下载到:" + path.toString());
+        
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(updateInfo.getDownloadUrl()));
         request.setDestinationUri(path);
+        request.setMimeType("application/vnd.android.package-archive");
+        request.setTitle(progressDialogTitle);
+        request.setDescription(progressDescription);
+        request.setVisibleInDownloadsUi(true);
+        request.setNotificationVisibility(VISIBILITY_VISIBLE | VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         downloadId = downloadManager.enqueue(request);
         if (onDownloadListener != null) onDownloadListener.onStart(downloadId);
         doGetProgress();
@@ -174,6 +185,10 @@ public class UpdateUtil {
         return progress;
     }
     
+    public UpdateUtil showNormalUpdateDialog(UpdateInfo updateInfo) {
+        return showNormalUpdateDialog(updateInfo, updateTitle, "从应用商店下载", "立即下载", "取消", false);
+    }
+    
     public UpdateUtil showNormalUpdateDialog(UpdateInfo updateInfo, String titleStr, String downloadByShopStr, String downloadNowStr, String cancelStr) {
         return showNormalUpdateDialog(updateInfo, titleStr, downloadByShopStr, downloadNowStr, cancelStr, false);
     }
@@ -181,6 +196,7 @@ public class UpdateUtil {
     private boolean isForced = false;
     
     public UpdateUtil showNormalUpdateDialog(final UpdateInfo updateInfo, String titleStr, final String downloadByShopStr, String downloadNowStr, String cancelStr, boolean isForced) {
+        isShowProgressDialog = true;
         this.isForced = isForced;
         android.support.v7.app.AlertDialog.Builder builder;
         builder = new android.support.v7.app.AlertDialog.Builder(me);
@@ -200,7 +216,7 @@ public class UpdateUtil {
             alertDialog.setButton(BUTTON_NEUTRAL, downloadByShopStr, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-        
+                
                 }
             });
 //            builder.setNeutralButton(downloadByShopStr, new DialogInterface.OnClickListener() {
@@ -215,7 +231,7 @@ public class UpdateUtil {
             alertDialog.setButton(BUTTON_NEGATIVE, cancelStr, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-        
+                
                 }
             });
         }
@@ -291,7 +307,7 @@ public class UpdateUtil {
             Log.d(">>>", o.toString());
     }
     
-    private boolean isWifi() {
+    public boolean isWifi() {
         ConnectivityManager connectivityManager = (ConnectivityManager) me.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
         if (activeNetInfo != null
@@ -326,13 +342,18 @@ public class UpdateUtil {
                                      @Override
                                      public void onClick(DialogInterface dialog, int which) {
                                          progressDialog.dismiss();
-                                         downloadManager.remove(downloadId);
-                                         if (onDownloadListener!=null)onDownloadListener.onCancel(downloadId);
-                                         if (downloadProgressTimer!=null)downloadProgressTimer.cancel();
+                                         cancel();
                                      }
                                  }
         );
         progressDialog.show();
+    }
+    
+    public void cancel() {
+        if (mReceiver != null) me.unregisterReceiver(mReceiver);
+        if (downloadManager != null && downloadId != 0) downloadManager.remove(downloadId);
+        if (onDownloadListener != null) onDownloadListener.onCancel(downloadId);
+        if (downloadProgressTimer != null) downloadProgressTimer.cancel();
     }
     
     private boolean isNull(String s) {

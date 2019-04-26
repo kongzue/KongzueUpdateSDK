@@ -2,10 +2,10 @@
 Kongzue APP更新工具
 
 <a href="https://github.com/kongzue/KongzueUpdateSDK">
-<img src="https://img.shields.io/badge/KongzueUpdateSDK-1.4.3-green.svg" alt="KongzueUpdateSDK">
+<img src="https://img.shields.io/badge/KongzueUpdateSDK-1.4.4-green.svg" alt="KongzueUpdateSDK">
 </a> 
 <a href="https://bintray.com/myzchh/maven/KongzueUpdateSDK">
-<img src="https://img.shields.io/badge/Maven-1.4.3-blue.svg" alt="Maven">
+<img src="https://img.shields.io/badge/Maven-1.4.4-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="Maven">
@@ -19,7 +19,7 @@ Kongzue APP更新工具
 
 引入方法：
 ```
-implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.4.3'
+implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.4.4'
 ```
 
 ## 重要说明
@@ -56,6 +56,7 @@ onDownloadListener | 下载监听器 | 可选
     package="您的包名">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         ...>
@@ -110,6 +111,11 @@ UpdateUtil updateUtil = new UpdateUtil(MainActivity.this, BuildConfig.APPLICATIO
 updateUtil.doUpdate(updateInfo);
 ```
 
+3) 取消下载
+```
+updateUtil.cancel();
+```
+
 ## 关于下载的监听
 您可以通过以下代码监听下载过程：
 
@@ -152,7 +158,14 @@ UpdateUtil updateUtil = new UpdateUtil(MainActivity.this, BuildConfig.APPLICATIO
 额外的小工具：
 ```
 UpdateUtil.isWifi()                         //判断Wifi状态
-UpdateUtil.isShowProgressDialog = true;     //是否开启进度对话框（默认开启）
+UpdateUtil.isShowProgressDialog = true;     //是否开启进度对话框（默认关闭）
+```
+
+额外设置：
+```
+UpdateUtil.updateTitle = (String)           //设置更新提示标题
+UpdateUtil.progressDialogTitle = (String)   //下载进度提示框和通知标题
+UpdateUtil.progressDescription = (String)   //下载进度通知内容
 ```
 
 ## 强制更新
@@ -165,6 +178,11 @@ UpdateUtil.isShowProgressDialog = true;     //是否开启进度对话框（默�
 下载完成后 UpdateUtil 会自动弹出安装，但因为安装过程不可控，用户可能手动返回，因此强烈建议开发者在 OnDownloadListener 的 onSuccess 事件中对软件进行退出，或者弹出一个自己的对话框阻止用户操作。
 
 额外的，UpdateUtil 公开了 installApk(Context) 方法，使用该方法可以手动重新启动安装，但此方法必须通过 UpdateUtil 下载完成后才可以使用。
+
+## 常见问题
+1. 在 Pixel 或原生系统中，未报错情况下出现下载进度一直处于 0% 的情况
+请检查网络是否可以正常连接 Google 服务器，因 Google 会进行 APK 安全性校验，若无法连接至 Google 会导致卡 0% 却不报错的问题。
+
 
 ## 开源协议
 ```
@@ -184,6 +202,12 @@ limitations under the License.
 ```
 
 ## 更新日志：
+1.4.4：
+- 新增下载时通知，详细设置请参考本文档。
+- 新增公开方法 cancel() 取消下载；
+- 默认情况下不显示下载进度对话框，但若使用 showNormalUpdateDialog(...) 默认更新提示对话框启动，则会显示更新进度对话框；
+- 新增方法 showNormalUpdateDialog(UpdateInfo) 用于快速显示更新提示
+
 1.4.3：
 - 更新提示对话框的"从商店下载"、"直接下载"按钮新增 null 文本判断，若使用 null 则会隐藏该按钮。
 - 新增强制更新属性，使用默认更新提示对话框开启该属性时无法取消，且对话框无法关闭；
