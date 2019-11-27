@@ -2,10 +2,10 @@
 Kongzue APP更新工具
 
 <a href="https://github.com/kongzue/KongzueUpdateSDK">
-<img src="https://img.shields.io/badge/KongzueUpdateSDK-1.4.4-green.svg" alt="KongzueUpdateSDK">
+<img src="https://img.shields.io/badge/KongzueUpdateSDK-1.4.5-green.svg" alt="KongzueUpdateSDK">
 </a> 
 <a href="https://bintray.com/myzchh/maven/KongzueUpdateSDK">
-<img src="https://img.shields.io/badge/Maven-1.4.4-blue.svg" alt="Maven">
+<img src="https://img.shields.io/badge/Maven-1.4.5-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="Maven">
@@ -19,11 +19,11 @@ Kongzue APP更新工具
 
 引入方法：
 ```
-implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.4.4'
+implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.4.5'
 ```
 
 ## 重要说明
-1) 本工具无需权限，但在 targetSdkVersion >= 26 的情况时可能出现安装程序闪退但不报错的问题，系 Android 8.0 的新规定，请在您的应用中添加如下权限即可：
+1) 本工具无需权限，但在 targetSdkVersion >= 26 的情况时可能出现安装程序闪退但不报错的问题，系 Android 8.0 的新规定，请注意在您的应用中额外添加权限：
 ```
 <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 ```
@@ -40,7 +40,7 @@ me(Context) | 上下文索引 | 必须
 packageName | 包名 | 必须
 onDownloadListener | 下载监听器 | 可选
 
-需要的权限：
+需要的主要权限：
 ```
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.INTERNET"/>
@@ -97,13 +97,21 @@ updateInfo = new UpdateInfo()
 .setDownloadUrl("http://paywhere.kongzue.com/downloads/paywhere.apk");
 ```
 
+3) 开发模式
+
+建议在开发过程中打开日志输出方便排查故障
+```
+UpdateUtil.DEBUGMODE = true;
+```
+此设置也可跟您的项目的 BuildConfig.DEBUG 进行关联。
+
 ## 下载并安装
 1) 使用如下语句创建下载工具：
 me(Context) 传入上下文索引，一般使用本 Activity 即可
 packageName 可直接使用 BuildConfig.APPLICATION_ID 获取：
 
 ```
-UpdateUtil updateUtil = new UpdateUtil(MainActivity.this, BuildConfig.APPLICATION_ID);
+UpdateUtil updateUtil = new UpdateUtil(MainActivity.this);
 ```
 2) 开始下载（结束后自动会弹出安装界面）：
 
@@ -114,6 +122,11 @@ updateUtil.doUpdate(updateInfo);
 3) 取消下载
 ```
 updateUtil.cancel();
+```
+
+4) 手动执行安装
+```
+updateUtil.installApk(MainActivity.this);
 ```
 
 ## 关于下载的监听
@@ -202,6 +215,10 @@ limitations under the License.
 ```
 
 ## 更新日志：
+1.4.5：
+- 新增日志开关 DEBUGMODE；
+- 修复一些问题；
+
 1.4.4：
 - 新增下载时通知，详细设置请参考本文档。
 - 新增公开方法 cancel() 取消下载；

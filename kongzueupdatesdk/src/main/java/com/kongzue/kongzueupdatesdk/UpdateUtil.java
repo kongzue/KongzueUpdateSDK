@@ -33,6 +33,7 @@ import static android.content.DialogInterface.BUTTON_POSITIVE;
 
 public class UpdateUtil {
     
+    public static boolean DEBUGMODE = false;
     public static String updateTitle = "发现新的版本";
     public static boolean isShowProgressDialog = false;          //是否显示默认更新进度对话框
     public static String hideProgressDialogButtonCaption = "后台下载";
@@ -50,6 +51,13 @@ public class UpdateUtil {
     private File file;
     
     private UpdateUtil() {
+        log("使用本组件请严格按照 https://github.com/kongzue/KongzueUpdateSDK 使用说明进行配置");
+    }
+    
+    public UpdateUtil(Context me) {
+        this.me = me;
+        this.packageName = me.getPackageName();
+        downloadManager = (DownloadManager) me.getSystemService(DOWNLOAD_SERVICE);
     }
     
     public UpdateUtil(Context me, String packageName) {
@@ -125,11 +133,14 @@ public class UpdateUtil {
     
     public void installApk(Context context) {
         if (!isDownloadCompleted) {
-            log("请先确保下载完成");
+            log("请先确保下载完成后才可执行安装");
             return;
         }
         Intent intent = new Intent(Intent.ACTION_VIEW);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            log("若未启动，请注意：\n" +
+                    "· 请确保已在 AndroidManifest.xml 配置“" + (packageName + ".fileProvider") + "”" + "\n" +
+                    "· 请确保已声明 android.permission.REQUEST_INSTALL_PACKAGES 权限");
             Uri contentUri = FileProvider.getUriForFile(context, packageName + ".fileProvider", file);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
@@ -219,12 +230,6 @@ public class UpdateUtil {
                 
                 }
             });
-//            builder.setNeutralButton(downloadByShopStr, new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    openMarket();
-//                }
-//            });
         }
         if (cancelStr == null) cancelStr = "CANCEL";
         if (!isForced) {
@@ -273,8 +278,7 @@ public class UpdateUtil {
     private class DownloadFinishReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-//            long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-//            if (onDownloadListener != null) onDownloadListener.onSuccess(downloadId);
+
         }
     }
     
@@ -303,7 +307,7 @@ public class UpdateUtil {
     }
     
     private void log(Object o) {
-        if (BuildConfig.DEBUG)
+        if (DEBUGMODE)
             Log.d(">>>", o.toString());
     }
     
@@ -329,22 +333,22 @@ public class UpdateUtil {
         progressDialog.setMax(100);
         if (!isForced) {
             progressDialog.setButton(DialogInterface.BUTTON_POSITIVE, hideProgressDialogButtonCaption,
-                                     new DialogInterface.OnClickListener() {
-                                         @Override
-                                         public void onClick(DialogInterface dialog, int which) {
-                                             progressDialog.dismiss();
-                                         }
-                                     }
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            progressDialog.dismiss();
+                        }
+                    }
             );
         }
         progressDialog.setButton(DialogInterface.BUTTON_NEUTRAL, cancelProgressDialogButtonCaption,
-                                 new DialogInterface.OnClickListener() {
-                                     @Override
-                                     public void onClick(DialogInterface dialog, int which) {
-                                         progressDialog.dismiss();
-                                         cancel();
-                                     }
-                                 }
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        progressDialog.dismiss();
+                        cancel();
+                    }
+                }
         );
         progressDialog.show();
     }
@@ -361,5 +365,10 @@ public class UpdateUtil {
             return true;
         }
         return false;
+    }
+    
+    public UpdateUtil setForced(boolean forced) {
+        isForced = forced;
+        return this;
     }
 }
