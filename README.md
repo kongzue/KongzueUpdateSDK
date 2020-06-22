@@ -45,7 +45,7 @@ implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:3.0.0'
     >
     ...
     
-    </application>
+</application>
 ```
 然后在您的项目 res 下新建 xml 目录，添加文件 network_security_config.xml，内容如下：
 ```
