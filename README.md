@@ -27,7 +27,7 @@ implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:3.0.0'
 老版本使用方法详见： <a href="README_V2.md">KongzueUpdateSDK 旧版接入指南</a>
 
 #### 配置
-1) 本工具提供下载、安装步骤，因网络请求框架不确定，本工具不包含到您服务器的检查更新的网络请求，请在获取到相应的更新信息请您自行完成。
+1) 本工具提供下载、安装步骤，因网络请求框架不确定，本工具不包含从您服务器的检查 APP 版本过程的网络请求。
 
 2) 添加权限：
 ```
