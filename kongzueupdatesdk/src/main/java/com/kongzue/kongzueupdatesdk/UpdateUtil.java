@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -41,7 +42,7 @@ public class UpdateUtil {
     public static String progressDialogTitle = "正在下载更新";
     public static String progressDescription = "";
     
-    private Context me;
+    private WeakReference<Context> me;
     private String packageName;
     private OnDownloadListener onDownloadListener;
     
@@ -55,13 +56,13 @@ public class UpdateUtil {
     }
     
     public UpdateUtil(Context me) {
-        this.me = me;
+        this.me = new WeakReference<>(me);
         this.packageName = me.getPackageName();
         downloadManager = (DownloadManager) me.getSystemService(DOWNLOAD_SERVICE);
     }
     
     public UpdateUtil(Context me, String packageName) {
-        this.me = me;
+        this.me = new WeakReference<>(me);
         this.packageName = packageName;
         downloadManager = (DownloadManager) me.getSystemService(DOWNLOAD_SERVICE);
     }
@@ -71,10 +72,10 @@ public class UpdateUtil {
             return false;
         }
         mReceiver = new DownloadFinishReceiver();
-        me.registerReceiver(mReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        me.get().registerReceiver(mReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         log("开始下载：" + updateInfo.getDownloadUrl());
         String ver = updateInfo.getVer() == null ? "" : "_" + updateInfo.getVer();
-        file = new File(me.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), packageName + ver + ".apk");
+        file = new File(me.get().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), packageName + ver + ".apk");
         if (file.exists()) file.delete();       //文件存在则删除
         Uri path = Uri.fromFile(file);
         log("下载到:" + path.toString());
@@ -99,7 +100,7 @@ public class UpdateUtil {
         intent.setAction("android.intent.action.VIEW");
         Uri content_url = Uri.parse(downloadUrl);
         intent.setData(content_url);
-        me.startActivity(intent);
+        me.get().startActivity(intent);
     }
     
     private Timer downloadProgressTimer;
@@ -120,7 +121,7 @@ public class UpdateUtil {
                     downloadProgressTimer.cancel();
                     if (progressDialog != null) progressDialog.dismiss();
                     isDownloadCompleted = true;
-                    installApk(me);
+                    installApk(me.get());
                     
                     if (onDownloadListener != null) onDownloadListener.onSuccess(downloadId);
                     return;
@@ -145,7 +146,7 @@ public class UpdateUtil {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
         } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-            intent.setDataAndType(Uri.fromFile(getRealFileInAndroudM(context, downloadId)), "application/vnd.android.package-archive");
+            intent.setDataAndType(Uri.fromFile(getRealFileInAndroidM(context, downloadId)), "application/vnd.android.package-archive");
         } else {
             intent.setDataAndType(
                     Uri.fromFile(file),
@@ -155,7 +156,7 @@ public class UpdateUtil {
         context.startActivity(intent);
     }
     
-    private File getRealFileInAndroudM(Context context, long downloadId) {
+    private File getRealFileInAndroidM(Context context, long downloadId) {
         File file = null;
         DownloadManager downloader = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         if (downloadId != -1) {
@@ -205,18 +206,19 @@ public class UpdateUtil {
     }
     
     private boolean isForced = false;
+    private android.support.v7.app.AlertDialog updateDialog;
     
     public UpdateUtil showNormalUpdateDialog(final UpdateInfo updateInfo, String titleStr, final String downloadByShopStr, String downloadNowStr, String cancelStr, boolean isForced) {
         isShowProgressDialog = true;
         this.isForced = isForced;
         android.support.v7.app.AlertDialog.Builder builder;
-        builder = new android.support.v7.app.AlertDialog.Builder(me);
-        final AlertDialog alertDialog = builder.create();
-        alertDialog.setTitle(titleStr);
-        alertDialog.setCancelable(!isForced);
-        alertDialog.setMessage(updateInfo.getInfo());
+        builder = new android.support.v7.app.AlertDialog.Builder(me.get());
+        updateDialog = builder.create();
+        updateDialog.setTitle(titleStr);
+        updateDialog.setCancelable(!isForced);
+        updateDialog.setMessage(updateInfo.getInfo());
         if (downloadNowStr != null) {
-            alertDialog.setButton(BUTTON_POSITIVE, downloadNowStr, new DialogInterface.OnClickListener() {
+            updateDialog.setButton(BUTTON_POSITIVE, downloadNowStr, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     doUpdate(updateInfo);
@@ -224,7 +226,7 @@ public class UpdateUtil {
             });
         }
         if (downloadByShopStr != null) {
-            alertDialog.setButton(BUTTON_NEUTRAL, downloadByShopStr, new DialogInterface.OnClickListener() {
+            updateDialog.setButton(BUTTON_NEUTRAL, downloadByShopStr, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                 
@@ -233,17 +235,17 @@ public class UpdateUtil {
         }
         if (cancelStr == null) cancelStr = "CANCEL";
         if (!isForced) {
-            alertDialog.setButton(BUTTON_NEGATIVE, cancelStr, new DialogInterface.OnClickListener() {
+            updateDialog.setButton(BUTTON_NEGATIVE, cancelStr, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                 
                 }
             });
         }
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+        updateDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
-                alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
+                updateDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         openMarket();
@@ -251,7 +253,7 @@ public class UpdateUtil {
                 });
             }
         });
-        alertDialog.show();
+        updateDialog.show();
         return this;
     }
     
@@ -260,7 +262,7 @@ public class UpdateUtil {
             String str = "market://details?id=" + packageName;
             Intent localIntent = new Intent(Intent.ACTION_VIEW);
             localIntent.setData(Uri.parse(str));
-            me.startActivity(localIntent);
+            me.get().startActivity(localIntent);
         } catch (Exception e) {
             // 打开应用商店失败 可能是没有手机没有安装应用市场
             e.printStackTrace();
@@ -272,13 +274,13 @@ public class UpdateUtil {
     private void openLinkBySystem(String url) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
-        me.startActivity(intent);
+        me.get().startActivity(intent);
     }
     
     private class DownloadFinishReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-
+        
         }
     }
     
@@ -312,7 +314,7 @@ public class UpdateUtil {
     }
     
     public boolean isWifi() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) me.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) me.get().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
         if (activeNetInfo != null
                 && activeNetInfo.getType() == ConnectivityManager.TYPE_WIFI) {
@@ -325,7 +327,7 @@ public class UpdateUtil {
     
     public void showProgressDialog() {
         if (!isShowProgressDialog) return;
-        progressDialog = new ProgressDialog(me);
+        progressDialog = new ProgressDialog(me.get());
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条
         progressDialog.setCancelable(!isForced);// 设置是否可以通过点击Back键取消
         progressDialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
@@ -354,10 +356,26 @@ public class UpdateUtil {
     }
     
     public void cancel() {
-        if (mReceiver != null) me.unregisterReceiver(mReceiver);
+        if (mReceiver != null) me.get().unregisterReceiver(mReceiver);
         if (downloadManager != null && downloadId != 0) downloadManager.remove(downloadId);
         if (onDownloadListener != null) onDownloadListener.onCancel(downloadId);
         if (downloadProgressTimer != null) downloadProgressTimer.cancel();
+    }
+    
+    public void destroy() {
+        cancel();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+        if (updateDialog != null) {
+            updateDialog.dismiss();
+            updateDialog = null;
+        }
+        if (me != null) {
+            me.clear();
+            me = null;
+        }
     }
     
     private boolean isNull(String s) {

@@ -2,10 +2,10 @@
 Kongzue APP更新工具
 
 <a href="https://github.com/kongzue/KongzueUpdateSDK">
-<img src="https://img.shields.io/badge/KongzueUpdateSDK-1.4.5-green.svg" alt="KongzueUpdateSDK">
+<img src="https://img.shields.io/badge/KongzueUpdateSDK-1.4.6-green.svg" alt="KongzueUpdateSDK">
 </a> 
 <a href="https://bintray.com/myzchh/maven/KongzueUpdateSDK">
-<img src="https://img.shields.io/badge/Maven-1.4.5-blue.svg" alt="Maven">
+<img src="https://img.shields.io/badge/Maven-1.4.6-blue.svg" alt="Maven">
 </a> 
 <a href="http://www.apache.org/licenses/LICENSE-2.0">
 <img src="https://img.shields.io/badge/License-Apache%202.0-red.svg" alt="Maven">
@@ -19,7 +19,7 @@ Kongzue APP更新工具
 
 引入方法：
 ```
-implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.4.5'
+implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:1.4.6'
 ```
 
 ## 重要说明
@@ -215,6 +215,9 @@ limitations under the License.
 ```
 
 ## 更新日志：
+1.4.6：
+- 解决内存泄漏的问题；
+
 1.4.5：
 - 新增日志开关 DEBUGMODE；
 - 修复一些问题；
