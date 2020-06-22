@@ -6,15 +6,15 @@ def siteUrl = 'https://github.com/kongzue/KongzueUpdateSDK' //项目在github主
 def gitUrl = 'https://github.com/kongzue/KongzueUpdateSDK.git'   //Git仓库的地址
 
 group = "com.kongzue.kongzueupdatesdk"//发布aar前缀根节点
-version = "1.4.6"//发布aar的库版本
+version = "3.0.0"//发布aar的库版本
 android {
     compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 8
-        versionName "1.4.6"
+        versionCode 10
+        versionName "3.0.0"
     }
 
     buildTypes {
@@ -61,18 +61,7 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    options.encoding = "UTF-8" //添加UTF-8编码方式
-}
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
 artifacts {
-    archives javadocJar
     archives sourcesJar
 }
 
@@ -94,5 +83,6 @@ bintray {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    api 'com.android.support:appcompat-v7:28.0.0+'
+    api 'com.android.support:support-annotations:28.0.0+'
 }

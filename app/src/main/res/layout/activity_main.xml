@@ -1,18 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingHorizontal="15dp"
+    android:paddingVertical="10dp"
     tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="设置下载地址："
+        android:textColor="#000"
+        android:textSize="18dp" />
+
+    <EditText
+        android:id="@+id/edit_download_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="http://cdn.to-future.net/paywhere/paywherex.apk"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="默认方式下载："
+        android:textColor="#000"
+        android:textSize="18dp" />
 
     <Button
         android:id="@+id/btn_download"
-        android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="手动下载"/>
+        android:text="开始下载" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="自定义过程UI："
+        android:textColor="#000"
+        android:textSize="18dp" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"/>
+
+    <TextView
+        android:id="@+id/txt_custom_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="这里是状态" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_download_custom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="开始下载" />
+
+        <Button
+            android:id="@+id/btn_stop_download_custom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="停止下载" />
+
+        <CheckBox
+            android:id="@+id/chk_auto_install"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="10dp"
+            android:text="自动安装" />
+
+        <Button
+            android:id="@+id/btn_install_custom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="手动安装" />
+    </LinearLayout>
 
 
-
-</RelativeLayout>
+</LinearLayout>

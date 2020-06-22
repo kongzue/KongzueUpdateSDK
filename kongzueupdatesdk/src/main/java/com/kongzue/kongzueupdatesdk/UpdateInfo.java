@@ -1,5 +1,6 @@
 package com.kongzue.kongzueupdatesdk;
 
+@Deprecated
 public class UpdateInfo {
 
     private String info;

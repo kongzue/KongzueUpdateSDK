@@ -32,6 +32,7 @@ import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 
+@Deprecated
 public class UpdateUtil {
     
     public static boolean DEBUGMODE = false;
