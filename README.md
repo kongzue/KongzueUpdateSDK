@@ -19,6 +19,30 @@ Kongzue APP更新工具
 
 ## 引入KongzueUpdateSDK到您的项目
 
+### jitpack
+
+最新版本：
+
+[![](https://jitpack.io/v/kongzue/KongzueUpdateSDK.svg)](https://jitpack.io/#kongzue/KongzueUpdateSDK)
+
+1. 进入 build.gradle(project) 引入 jitpack 仓库：
+```
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+2. 进入 build.gradle(app) 引入 UpdateUI：
+
+```
+implementation 'com.github.kongzue:KongzueUpdateSDK:3.0.1'
+```
+
+### jCenter(已废弃)
+
 引入方法：
 ```
 implementation 'com.kongzue.kongzueupdatesdk:kongzueupdatesdk:3.0.0'
