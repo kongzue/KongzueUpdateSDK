@@ -275,6 +275,26 @@ public class UpdateUtil {
         return true;
     }
     
+    public boolean installApk(File apkFile) {
+        log("准备启动安装步骤");
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            log("若未启动，请注意：\n" +
+                    "· 请确保已在 AndroidManifest.xml 配置“" + (contextWeakReference.get().getPackageName() + ".fileProvider") + "”" + "\n" +
+                    "· 请确保已声明 android.permission.REQUEST_INSTALL_PACKAGES 权限");
+            Uri contentUri = FileProvider.getUriForFile(contextWeakReference.get(), contextWeakReference.get().getPackageName() + ".fileProvider", apkFile);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+        } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            intent.setDataAndType(Uri.fromFile(getRealFileInAndroidM(contextWeakReference.get(), downloadId)), "application/vnd.android.package-archive");
+        } else {
+            intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
+        }
+        contextWeakReference.get().startActivity(intent);
+        getOnUpdateStatusChangeListener().onInstallStart();
+        return true;
+    }
+    
     private File getRealFileInAndroidM(Context context, long downloadId) {
         File file = null;
         DownloadManager downloader = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
@@ -467,6 +487,15 @@ public class UpdateUtil {
     private void log(Object o) {
         if (DEBUGMODE)
             Log.d(">>>", o.toString());
+    }
+    
+    public boolean isForced() {
+        return isForced;
+    }
+    
+    public UpdateUtil setForced(boolean forced) {
+        isForced = forced;
+        return this;
     }
     
     public boolean isInstallWhenDownloadFinish() {
