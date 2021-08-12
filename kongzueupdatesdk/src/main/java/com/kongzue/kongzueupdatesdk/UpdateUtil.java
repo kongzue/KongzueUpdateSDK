@@ -13,12 +13,11 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Handler;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
+
+import androidx.core.content.FileProvider;
+import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -207,13 +206,13 @@ public class UpdateUtil {
     }
     
     private boolean isForced = false;
-    private android.support.v7.app.AlertDialog updateDialog;
+    private androidx.appcompat.app.AlertDialog updateDialog;
     
     public UpdateUtil showNormalUpdateDialog(final UpdateInfo updateInfo, String titleStr, final String downloadByShopStr, String downloadNowStr, String cancelStr, boolean isForced) {
         isShowProgressDialog = true;
         this.isForced = isForced;
-        android.support.v7.app.AlertDialog.Builder builder;
-        builder = new android.support.v7.app.AlertDialog.Builder(me.get());
+        androidx.appcompat.app.AlertDialog.Builder builder;
+        builder = new androidx.appcompat.app.AlertDialog.Builder(me.get());
         updateDialog = builder.create();
         updateDialog.setTitle(titleStr);
         updateDialog.setCancelable(!isForced);
