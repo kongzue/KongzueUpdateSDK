@@ -8,10 +8,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.appcompat.app.AlertDialog;
+
 import android.util.Log;
 
 import java.io.File;
@@ -51,6 +53,7 @@ public class UpdateUtil {
     private String downloadUrl;                                             //下载地址 {get}
     private boolean installWhenDownloadFinish = true;                       //是否在下载结束时自动启动安装 {get/set}
     private File readyFile;                                                 //下载目标文件位置
+    private File readyDownloadPath;                                         //设定下载目标文件位置（目录） {get/set}
     
     /**
      * 更新相关
@@ -105,8 +108,8 @@ public class UpdateUtil {
      */
     public void start(@NonNull String apkUrl) {
         downloadUrl = apkUrl;
-        readyFile = new File(
-                contextWeakReference.get().getExternalFilesDir("Update"),
+        readyFile = new File(readyDownloadPath == null ?
+                contextWeakReference.get().getExternalFilesDir("Update") : readyDownloadPath,
                 contextWeakReference.get().getPackageName() + ".apk"
         );
         if (readyFile.exists()) readyFile.delete();       //文件存在则删除
@@ -519,5 +522,14 @@ public class UpdateUtil {
      */
     public String getDownloadUrl() {
         return downloadUrl;
+    }
+    
+    public File getReadyDownloadPath() {
+        return readyDownloadPath;
+    }
+    
+    public UpdateUtil setReadyDownloadPath(File readyDownloadPath) {
+        this.readyDownloadPath = readyDownloadPath;
+        return this;
     }
 }
